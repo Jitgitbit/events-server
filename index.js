@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require(`./db`)
+const Event = require(`./event/model`);
 
 const app = express();
 
