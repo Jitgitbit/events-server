@@ -3,13 +3,34 @@ const { Router } = require('express')
 const router = new Router()
 const db = require(`../db`);
 
+// router.get('/events', (req, res, next) => {
+//   Event.findAll()
+//     .then(events => {
+//       res.send(events);
+//     })
+//     .catch(err => next(err))
+// });
+
 router.get('/events', (req, res, next) => {
-  Event.findAll()
-    .then(events => {
-      res.send(events);
+  const limit = Math.min(req.query.limit || 25, 500)
+  const offset = req.query.offset || 0
+  Event
+    .findAll({
+      limit, offset
     })
-    .catch(err => next(err))
-});
+    .then(events => {
+      res.send(events)
+    })
+    .catch(error => next(error))
+})
+
+// router.get('/events', (req, res, next) => {
+//   const limit = req.query.limit || 25
+//   const offset = req.query.offset || 0
+//   Event.findAndCountAll({ limit, offset })
+//     .then(result => res.send({ events: result.rows, total: result.count }))
+//     .catch(error => next(error))
+// })
 
 router.get('/events/:id', (req, res, next) => {
   Event.findByPk(req.params.id) // beware: if you want to define a const with req.params.id you have to parseInt(), because Url returns a string !!
